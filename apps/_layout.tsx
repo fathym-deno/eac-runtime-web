@@ -1,5 +1,5 @@
-import { JSX } from 'preact';
-import { Button } from '../components/Button.tsx';
+import { JSX } from "preact";
+import { Button } from "../components/Button.tsx";
 
 export default function Layout() {
   return (
