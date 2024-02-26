@@ -12,6 +12,13 @@
     "start": "deno run -A main.ts",
     "test": "deno test -A tests/tests.ts --coverage=cov"
   },
+  "imports": {
+    "@fathym/eac": "https://deno.land/x/fathym_everything_as_code@v0.0.338-integration/mod.ts",
+    "@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.96/mod.ts",
+    "preact": "https://esm.sh/preact@10.19.6",
+    "preact/": "https://esm.sh/preact@10.19.6/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.4.0"
+  },
   "lint": {
     "rules": {
       "tags": [
@@ -20,13 +27,8 @@
     }
   },
   "exclude": [
-    "**/_eac/*"
+    "**/_eac-runtime/*"
   ],
-  "imports": {
-    "@fathym/eac": "https://deno.land/x/fathym_everything_as_code@v0.0.338-integration/mod.ts",
-    "@fathym/eac/runtime": "../eac-runtime/mod.ts",
-    "_@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.87/mod.ts"
-  },
   "unstable": [
     "kv"
   ],
