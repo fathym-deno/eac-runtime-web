@@ -17,9 +17,9 @@
     // "@fathym/eac": "../everything-as-code/mod.ts",
     "@fathym/eac": "https://deno.land/x/fathym_everything_as_code@v0.0.357/mod.ts",
     // "@fathym/eac/runtime": "../eac-runtime/mod.ts",
-    "@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.125/mod.ts",
+    "@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.127/mod.ts",
     // "@fathym/eac/runtime/": "../eac-runtime/src/",
-    "@fathym/eac/runtime/": "https://deno.land/x/fathym_eac_runtime@v0.0.125/src/",
+    "@fathym/eac/runtime/": "https://deno.land/x/fathym_eac_runtime@v0.0.127/src/",
     "preact": "https://esm.sh/preact@10.19.6",
     "preact/": "https://esm.sh/preact@10.19.6/",
     "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.4.0"
