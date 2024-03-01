@@ -1,9 +1,9 @@
 import { DefaultEaCConfig, defineEaCConfig } from '@fathym/eac/runtime';
-import EaCRuntimeWebPlugin from '../plugins/EaCRuntimeWebPlugin.ts';
+import EaCRuntimeWebPlugin from '../src/plugins/EaCRuntimeWebPlugin.ts';
 
 export default defineEaCConfig({
-  ModifierLookups: [],
-  // Plugins: [['@fathym/eac/runtime/runtime/plugins/FathymDemoPlugin.ts', 6121], ...(DefaultEaCConfig.Plugins || [])],
+  ModifierResolvers: {},
+  // Plugins: [['@fathym/eac/runtime/src/runtime/plugins/FathymDemoPlugin.ts', 6121], ...(DefaultEaCConfig.Plugins || [])],
   Plugins: [
     new EaCRuntimeWebPlugin({ marketingPort: 6120, dashboardPort: 6121 }),
     ...(DefaultEaCConfig.Plugins || []),

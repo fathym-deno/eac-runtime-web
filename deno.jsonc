@@ -15,11 +15,12 @@
   },
   "imports": {
     // "@fathym/eac": "../everything-as-code/mod.ts",
-    "@fathym/eac": "https://deno.land/x/fathym_everything_as_code@v0.0.357/mod.ts",
+    "@fathym/eac": "https://deno.land/x/fathym_everything_as_code@v0.0.369/mod.ts",
     // "@fathym/eac/runtime": "../eac-runtime/mod.ts",
-    "@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.128/mod.ts",
-    // "@fathym/eac/runtime/": "../eac-runtime/src/",
-    "@fathym/eac/runtime/": "https://deno.land/x/fathym_eac_runtime@v0.0.128/src/",
+    "@fathym/eac/runtime": "https://deno.land/x/fathym_eac_runtime@v0.0.138/mod.ts",
+    // "@fathym/eac/runtime/": "../eac-runtime/",
+    "@fathym/eac/runtime/": "https://deno.land/x/fathym_eac_runtime@v0.0.138/",
+    "@langchain/community/vectorstores/azure_aisearch": "npm:@langchain/community/vectorstores/azure_aisearch",
     "preact": "https://esm.sh/preact@10.19.6",
     "preact/": "https://esm.sh/preact@10.19.6/",
     "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.4.0"
@@ -44,9 +45,7 @@
     "singleQuote": true,
     "useTabs": false
   },
-  "unstable": [
-    "kv"
-  ],
+  "unstable": ["kv"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
