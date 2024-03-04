@@ -1,5 +1,6 @@
 import {
   EaCAIChatProcessor,
+  EaCAPIProcessor,
   EaCAzureADB2CProviderDetails,
   EaCAzureOpenAIEmbeddingsDetails,
   EaCAzureOpenAILLMDetails,
@@ -62,17 +63,13 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 IsPrivate: true,
                 IsTriggerSignIn: true,
               },
-              // docs: {
-              //   PathPattern: '/docs/*',
-              //   Priority: 200,
-              // },
-              fathym: {
-                PathPattern: '/fathym',
-                Priority: 200,
-              },
               docs: {
                 PathPattern: '/*',
                 Priority: 100,
+              },
+              docsDirect: {
+                PathPattern: '/fathym',
+                Priority: 200,
               },
               oauth: {
                 PathPattern: '/oauth/*',
@@ -134,12 +131,12 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 UserAgentRegex: '^Deno*',
               },
               docs: {
-                PathPattern: '/docs*',
+                PathPattern: '/docs/*',
                 Priority: 2000,
               },
-              fathym: {
-                PathPattern: '/fathym',
-                Priority: 200,
+              docsDirect: {
+                PathPattern: '/docs',
+                Priority: 2000,
               },
               fathymWhiteLogo: {
                 PathPattern: '/img/Fathym-logo-white-01.png',
@@ -151,6 +148,10 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               },
               oauth: {
                 PathPattern: '/oauth/*',
+                Priority: 500,
+              },
+              localApiProxy: {
+                PathPattern: '/api-local*',
                 Priority: 500,
               },
               publicWebBlog: {
@@ -252,21 +253,33 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               } as EaCLocalDistributedFileSystem,
             } as EaCDFSProcessor,
           },
-          // docs: {
-          //   Details: {
-          //     Name: 'Documentation Site',
-          //     Description: 'The documentation site for the project',
-          //   },
-          //   Processor: {},
-          // },
-          fathym: {
+          docs: {
             Details: {
-              Name: 'Fathym Redirect',
-              Description: 'A redirect to Fathym',
+              Name: 'Home Site',
+              Description: 'The home site to be used for the marketing of the project',
+            },
+            ModifierResolvers: {
+              markdown: {
+                Priority: 10,
+              },
+            },
+            Processor: {
+              Type: 'DFS',
+              DFS: {
+                Type: 'Remote',
+                DefaultFile: 'Overview.md',
+                RemoteRoot: 'https://deno.land/x/fathym_eac_runtime/docs/',
+              } as EaCRemoteDistributedFileSystem,
+            } as EaCDFSProcessor,
+          },
+          docsDirect: {
+            Details: {
+              Name: 'Docs Direct Redirect',
+              Description: 'A redirect to /docs/ when going to /docs',
             },
             Processor: {
               Type: 'Redirect',
-              Redirect: 'https://www.fathym.com/',
+              Redirect: '/docs/',
             } as EaCRedirectProcessor,
           },
           fathymWhiteLogo: {
@@ -301,27 +314,21 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               RedirectMode: 'follow',
             } as EaCProxyProcessor,
           },
-          docs: {
+          localApiProxy: {
             Details: {
-              Name: 'Home Site',
-              Description: 'The home site to be used for the marketing of the project',
-            },
-            ModifierResolvers: {
-              baseHref: {
-                Priority: 20,
-              },
-              markdown: {
-                Priority: 10,
-              },
+              Name: 'Simple Local API Proxy',
+              Description: 'A proxy',
             },
             Processor: {
-              Type: 'DFS',
+              Type: 'API',
               DFS: {
-                Type: 'Remote',
-                DefaultFile: 'Overview.md',
-                RemoteRoot: 'https://deno.land/x/fathym_eac_runtime/docs/',
-              } as EaCRemoteDistributedFileSystem,
-            } as EaCDFSProcessor,
+                Type: 'Local',
+                FileRoot: './apps/api/',
+                DefaultFile: 'index.ts',
+                Extensions: ['ts'],
+              } as EaCLocalDistributedFileSystem,
+              DefaultContentType: 'application/json',
+            } as EaCAPIProcessor,
           },
           oauth: {
             Details: {
