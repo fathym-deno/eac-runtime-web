@@ -9,6 +9,7 @@ import {
   EaCDenoKVCacheModifierDetails,
   EaCDenoKVDatabaseDetails,
   EaCDFSProcessor,
+  EaCJWTValidationModifierDetails,
   EaCKeepAliveModifierDetails,
   EaCLocalDistributedFileSystem,
   EaCMarkdownToHTMLModifierDetails,
@@ -319,6 +320,11 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               Name: 'Simple Local API Proxy',
               Description: 'A proxy',
             },
+            ModifierResolvers: {
+              jwtValidate: {
+                Priority: 1000,
+              },
+            },
             Processor: {
               Type: 'API',
               DFS: {
@@ -419,6 +425,13 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               PathFilterRegex:
                 `^[^\\s]*(iconset\\/icons|\\.(apng|avif|bmp|cur|gif|ico|jfif|jpg|jpeg|pjpeg|pjp|png|svg|tiff|tif|webp|js|ts|css|))(\\?|#|$)`,
             } as EaCDenoKVCacheModifierDetails,
+          },
+          jwtValidate: {
+            Details: {
+              Type: 'JWTValidation',
+              Name: 'Validate JWT',
+              Description: 'Validate incoming JWTs to restrict access.',
+            } as EaCJWTValidationModifierDetails,
           },
           keepAlive: {
             Details: {
