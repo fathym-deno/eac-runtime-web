@@ -154,10 +154,10 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 PathPattern: '/oauth/*',
                 Priority: 500,
               },
-              // localApiProxy: {
-              //   PathPattern: '/api-local*',
-              //   Priority: 500,
-              // },
+              localApiProxy: {
+                PathPattern: '/api-local*',
+                Priority: 500,
+              },
               localTestApp: {
                 PathPattern: '/test*',
                 Priority: 500,

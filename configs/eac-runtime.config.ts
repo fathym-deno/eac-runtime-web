@@ -1,4 +1,4 @@
-import { DefaultEaCConfig, defineEaCConfig, EaCRuntime, IS_BUILDING } from '@fathym/eac/runtime';
+import { DefaultEaCConfig, defineEaCConfig, EaCRuntime } from '@fathym/eac/runtime';
 import EaCRuntimeWebPlugin from '../src/plugins/EaCRuntimeWebPlugin.ts';
 
 export const config = defineEaCConfig({
@@ -14,9 +14,5 @@ export const config = defineEaCConfig({
 });
 
 export function configure(_rt: EaCRuntime): Promise<void> {
-  if (IS_BUILDING) {
-    Deno.env.set('SUPPORTS_WORKERS', 'false');
-  }
-
   return Promise.resolve();
 }
