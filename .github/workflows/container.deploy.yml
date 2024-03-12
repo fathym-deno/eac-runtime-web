@@ -46,7 +46,7 @@ jobs:
           push: true
           tags: ${{ env.ACR_REGISTRY }}/${{ env.IMAGE_NAME }}
           context: .
-          file: Dockerfile
+          file: DOCKERFILE
           load: false
       
       - name: Deploy to Web App for Containers
