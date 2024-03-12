@@ -8,6 +8,7 @@ import {
   EaCBaseHREFModifierDetails,
   EaCDenoKVCacheModifierDetails,
   EaCDenoKVDatabaseDetails,
+  EaCDenoKVDistributedFileSystem,
   EaCDFSProcessor,
   EaCJWTValidationModifierDetails,
   EaCKeepAliveModifierDetails,
@@ -16,9 +17,11 @@ import {
   EaCNPMDistributedFileSystem,
   EaCOAuthModifierDetails,
   EaCOAuthProcessor,
+  EaCPreactAppProcessor,
   EaCProxyProcessor,
   EaCRedirectProcessor,
   EaCRemoteDistributedFileSystem,
+  EaCTailwindProcessor,
   EaCTracingModifierDetails,
   EaCWatsonXLLMDetails,
 } from '@fathym/eac';
@@ -151,12 +154,20 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 PathPattern: '/oauth/*',
                 Priority: 500,
               },
-              localApiProxy: {
-                PathPattern: '/api-local*',
+              // localApiProxy: {
+              //   PathPattern: '/api-local*',
+              //   Priority: 500,
+              // },
+              localTestApp: {
+                PathPattern: '/test*',
                 Priority: 500,
               },
               publicWebBlog: {
                 PathPattern: '/blog*',
+                Priority: 500,
+              },
+              tailwind: {
+                PathPattern: '/tailwind*',
                 Priority: 500,
               },
               // profile: {
@@ -248,10 +259,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             // ModifierResolvers: ['static-cache'],
             Processor: {
               Type: 'DFS',
-              DFS: {
-                Type: 'Local',
-                FileRoot: './',
-              } as EaCLocalDistributedFileSystem,
+              DFSLookup: 'local:$root',
             } as EaCDFSProcessor,
           },
           docs: {
@@ -266,11 +274,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             },
             Processor: {
               Type: 'DFS',
-              DFS: {
-                Type: 'Remote',
-                DefaultFile: 'Overview.md',
-                RemoteRoot: 'https://deno.land/x/fathym_eac_runtime/docs/',
-              } as EaCRemoteDistributedFileSystem,
+              DFSLookup: 'remote:fathym_eac_runtime/docs',
             } as EaCDFSProcessor,
           },
           docsDirect: {
@@ -327,14 +331,22 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             },
             Processor: {
               Type: 'API',
-              DFS: {
-                Type: 'Local',
-                FileRoot: './apps/api/',
-                DefaultFile: 'index.ts',
-                Extensions: ['ts'],
-              } as EaCLocalDistributedFileSystem,
+              DFSLookup: 'local:apps/api',
               DefaultContentType: 'application/json',
             } as EaCAPIProcessor,
+          },
+          localTestApp: {
+            Details: {
+              Name: 'Simple Local Test Preact App',
+              Description: 'A preact app',
+            },
+            ModifierResolvers: {},
+            Processor: {
+              Type: 'PreactApp',
+              AppDFSLookup: 'local:apps/test',
+              BundleDFSLookup: 'denokv:apps/test/_bundle',
+              ComponentDFSLookups: ['local:apps/components'],
+            } as EaCPreactAppProcessor,
           },
           oauth: {
             Details: {
@@ -366,12 +378,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             },
             Processor: {
               Type: 'DFS',
-              DFS: {
-                Type: 'NPM',
-                DefaultFile: 'index.html',
-                Package: '@lowcodeunit/public-web-blog',
-                Version: 'latest',
-              } as EaCNPMDistributedFileSystem,
+              DFSLookup: 'npm:@lowcodeunit/public-web-blog',
               CacheControl: {
                 'text\\/html': `private, max-age=${60 * 5}`,
                 'image\\/': `public, max-age=${60 * 60 * 24 * 365}, immutable`,
@@ -381,6 +388,65 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               },
             } as EaCDFSProcessor,
           },
+          tailwind: {
+            Details: {
+              Name: 'Tailwind for the Site',
+              Description: 'A tailwind config for the site',
+            },
+            ModifierResolvers: {},
+            Processor: {
+              Type: 'Tailwind',
+              DFSLookups: [
+                'local:apps/test',
+                // 'denokv:apps/test/_bundle',
+                'local:apps/components',
+              ],
+              ConfigPath: '/apps/tailwind/tailwind.config.ts',
+              StylesTemplatePath: './apps/tailwind/styles.css',
+              CacheControl: {
+                'text\\/css': `public, max-age=${60 * 60 * 24 * 365}, immutable`,
+              },
+            } as EaCTailwindProcessor,
+          },
+        },
+        DFS: {
+          'npm:@lowcodeunit/public-web-blog': {
+            Type: 'NPM',
+            DefaultFile: 'index.html',
+            Package: '@lowcodeunit/public-web-blog',
+            Version: 'latest',
+          } as EaCNPMDistributedFileSystem,
+          'local:$root': {
+            Type: 'Local',
+            FileRoot: './',
+          } as EaCLocalDistributedFileSystem,
+          'remote:fathym_eac_runtime/docs': {
+            Type: 'Remote',
+            DefaultFile: 'Overview.md',
+            RemoteRoot: 'https://deno.land/x/fathym_eac_runtime/docs/',
+          } as EaCRemoteDistributedFileSystem,
+          'local:apps/api': {
+            Type: 'Local',
+            FileRoot: './apps/api/',
+            DefaultFile: 'index.ts',
+            Extensions: ['ts'],
+          } as EaCLocalDistributedFileSystem,
+          'local:apps/test': {
+            Type: 'Local',
+            FileRoot: './apps/test/',
+            DefaultFile: 'index.tsx',
+            Extensions: ['tsx'],
+          } as EaCLocalDistributedFileSystem,
+          'denokv:apps/test/_bundle': {
+            Type: 'DenoKV',
+            DatabaseLookup: 'dfs',
+            FileRoot: './apps/test/_bundle/',
+            RootKey: ['DFS', 'PreactApp', 'localTestApp'],
+          } as EaCDenoKVDistributedFileSystem,
+          'local:apps/components': {
+            Type: 'Local',
+            FileRoot: './apps/components/',
+          } as EaCLocalDistributedFileSystem,
         },
         Providers: {
           adb2c: {
@@ -403,6 +469,14 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               Name: 'Local Cache',
               Description: 'The Deno KV database to use for local caching',
               DenoKVPath: Deno.env.get('LOCAL_CACHE_DENO_KV_PATH') || undefined,
+            } as EaCDenoKVDatabaseDetails,
+          },
+          dfs: {
+            Details: {
+              Type: 'DenoKV',
+              Name: 'Database for the DFS',
+              Description: 'The Deno KV database to use for the DFS',
+              DenoKVPath: Deno.env.get('DFS_DENO_KV_PATH') || undefined,
             } as EaCDenoKVDatabaseDetails,
           },
         },
