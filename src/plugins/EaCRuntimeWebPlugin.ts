@@ -109,6 +109,9 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               oauth: {
                 Priority: 1200,
               },
+              tracing: {
+                Priority: 1300,
+              },
             },
             ApplicationResolvers: {
               apiProxy: {
