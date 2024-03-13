@@ -95,6 +95,9 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               denoDeploy: {
                 Hostname: 'eac-runtime.deno.dev',
               },
+              azureDeploy: {
+                Hostname: 'eac-runtime-web.azurewebsites.net',
+              },
               fathym: {
                 Hostname: 'eac-runtime.fathym.com',
               },
