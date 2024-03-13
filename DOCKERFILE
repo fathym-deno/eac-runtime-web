@@ -1,13 +1,13 @@
 FROM denoland/deno:latest
 ARG VERSION
 ENV DENO_DEPLOYMENT_ID=${VERSION}
-ENV PORT=8000
+# ENV PORT=8000
 
 WORKDIR /app
 
 COPY . .
 RUN deno cache --reload main.ts
 
-EXPOSE 8000
+EXPOSE 6121
 
 CMD ["run", "-A", "main.ts"]

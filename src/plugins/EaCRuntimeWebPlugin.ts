@@ -98,6 +98,10 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               azureDeploy: {
                 Hostname: 'eac-runtime-web.azurewebsites.net',
               },
+              azureHook: {
+                Hostname: '*',
+                Port: this.cfg?.dashboardPort || 6121,
+              },
               fathym: {
                 Hostname: 'eac-runtime.fathym.com',
               },
