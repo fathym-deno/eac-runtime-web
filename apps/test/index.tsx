@@ -1,7 +1,5 @@
 import { EaCRuntimeHandlerResult, PageProps } from '@fathym/eac/runtime';
-import Button from '$local/apps/components/Button.tsx';
-import Button2 from '$local/apps/components/Button2.tsx';
-import Shell from '$local/apps/components/Shell.tsx';
+import Counter from '../components/Counter.tsx';
 
 export const handler: EaCRuntimeHandlerResult = [
   (_req, ctx) => {
@@ -21,49 +19,24 @@ export const handler: EaCRuntimeHandlerResult = [
 
 export default function Index({ Data }: PageProps) {
   return (
-    // <Shell value="Shell 2">
-    //   <Shell value="Shell 2 > sub">
-    //     <Button2>Hey Original Child</Button2>
-    //   </Shell>
-    // </Shell>
     <div>
-      <div>
-        <Shell value='Shell 2'>
-          <Shell value='Shell 2 > sub'>
-            <Shell value='Shell 2 > sub > sub'>
-              <Shell value='Shell 2 > sub > sub > sub'>
-                <Button2>Hey Original Child</Button2>
-              </Shell>
-            </Shell>
-          </Shell>
-        </Shell>
+      <div class='py-16 px-4 bg-slate-500'>
+        <div class='mx-auto block w-[350px] text-center'>
+          <h1 class='text-4xl'>Fathym EaC Runtime</h1>
 
-        {[
-          Array.from(new Array(10).keys()).map((e, i) => {
-            return (
-              <>
-                <div>
-                  <Button />
-                </div>
+          <p class='text-lg'>
+            Bring your applications and ideas to life with ease.
+          </p>
 
-                <div class='-:[&>*]:bg-green-500'>
-                  <Button2>Hey {i} Child</Button2>
-                </div>
-              </>
-            );
-          }),
-        ]}
+          <div class='flex flex-row py-8'>
+            <Counter />
+          </div>
+        </div>
       </div>
 
-      <button onClick={() => alert(Data.Hey)}>
-        {Data.Hey} - {Data.Thing}
-      </button>
-
-      <a href='/'>Here</a>
-
-      <a href='/' eac-bypass-base>
-        There
-      </a>
+      <div class='p-4'>
+        <h2 class='text-2xl'>Welcome</h2>
+      </div>
     </div>
   );
 }

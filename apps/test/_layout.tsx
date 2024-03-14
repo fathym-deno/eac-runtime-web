@@ -1,6 +1,6 @@
 import { PageProps } from '@fathym/eac/runtime';
 
-export default function Layout({ Data, Component }: PageProps) {
+export default function Layout({ Data, Component, Revision }: PageProps) {
   return (
     <html>
       <head>
@@ -10,7 +10,11 @@ export default function Layout({ Data, Component }: PageProps) {
         <title>Fathym EaC Runtime</title>
 
         <link rel='shortcut icon' type='image/png' href='/thinky.png' />
-        <link rel='stylesheet' href='/tailwind/styles.css' data-eac-bypass-base />
+        <link
+          rel='stylesheet'
+          href={`/tailwind/styles.css?Revision=${Revision}`}
+          data-eac-bypass-base
+        />
       </head>
 
       <body class='bg-slate-50 dark:bg-slate-900 text-black dark:text-white'>
