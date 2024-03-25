@@ -131,7 +131,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 // IsTriggerSignIn: true,
               },
               dashboard: {
-                PathPattern: '/*',
+                PathPattern: '*',
                 Priority: 100,
               },
               denoInstall: {
@@ -354,8 +354,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             Processor: {
               Type: 'PreactApp',
               AppDFSLookup: 'local:apps/test',
-              BundleDFSLookup: 'denokv:apps/test/_bundle',
-              ComponentDFSLookups: ['local:apps/components'],
+              ComponentDFSLookups: [['local:apps/components', ['tsx']]],
             } as EaCPreactAppProcessor,
           },
           oauth: {
@@ -460,6 +459,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
         },
         Providers: {
           adb2c: {
+            DatabaseLookup: 'oauth',
             Details: {
               Name: 'Azure ADB2C OAuth Provider',
               Description: 'The provider used to connect with our azure adb2c instance',
@@ -487,6 +487,14 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               Name: 'Database for the DFS',
               Description: 'The Deno KV database to use for the DFS',
               DenoKVPath: Deno.env.get('DFS_DENO_KV_PATH') || undefined,
+            } as EaCDenoKVDatabaseDetails,
+          },
+          oauth: {
+            Details: {
+              Type: 'DenoKV',
+              Name: 'Local Cache',
+              Description: 'The Deno KV database to use for local caching',
+              DenoKVPath: Deno.env.get('OAUTH_DENO_KV_PATH') || undefined,
             } as EaCDenoKVDatabaseDetails,
           },
         },
