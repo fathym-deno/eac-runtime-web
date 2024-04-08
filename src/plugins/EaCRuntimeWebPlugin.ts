@@ -25,7 +25,11 @@ import {
   EaCTracingModifierDetails,
   EaCWatsonXLLMDetails,
 } from '@fathym/eac';
-import { EaCRuntimePlugin, EaCRuntimePluginConfig } from '@fathym/eac/runtime';
+import {
+  EaCRuntimePlugin,
+  EaCRuntimePluginConfig,
+  FathymAzureContainerCheckPlugin,
+} from '@fathym/eac/runtime';
 import { AzureAISearchQueryType } from '@langchain/community/vectorstores/azure_aisearch';
 
 export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
@@ -40,6 +44,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
   public Build(): Promise<EaCRuntimePluginConfig> {
     const config: EaCRuntimePluginConfig = {
       Name: 'EaCRuntimeWebPlugin',
+      Plugins: [new FathymAzureContainerCheckPlugin()],
       EaC: {
         EnterpriseLookup: 'local-eac',
         Projects: {
@@ -97,10 +102,6 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               },
               azureDeploy: {
                 Hostname: 'eac-runtime-web.azurewebsites.net',
-              },
-              azureHook: {
-                Hostname: '*',
-                Port: this.cfg?.dashboardPort || 6121,
               },
               fathym: {
                 Hostname: 'eac-runtime.fathym.com',
