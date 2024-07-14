@@ -1,10 +1,6 @@
 import {
-  EaCAIChatProcessor,
   EaCAPIProcessor,
   EaCAzureADB2CProviderDetails,
-  EaCAzureOpenAIEmbeddingsDetails,
-  EaCAzureOpenAILLMDetails,
-  EaCAzureSearchAIVectorStoreDetails,
   EaCBaseHREFModifierDetails,
   EaCDenoKVCacheModifierDetails,
   EaCDenoKVDatabaseDetails,
@@ -23,14 +19,12 @@ import {
   EaCRemoteDistributedFileSystem,
   EaCTailwindProcessor,
   EaCTracingModifierDetails,
-  EaCWatsonXLLMDetails,
 } from '@fathym/eac';
 import {
   EaCRuntimePlugin,
   EaCRuntimePluginConfig,
   FathymAzureContainerCheckPlugin,
 } from '@fathym/eac/runtime';
-import { AzureAISearchQueryType } from '@langchain/community/vectorstores/azure_aisearch';
 
 export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
   constructor(
@@ -41,7 +35,7 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
     },
   ) {}
 
-  public Build(): Promise<EaCRuntimePluginConfig> {
+  public Setup(): Promise<EaCRuntimePluginConfig> {
     const config: EaCRuntimePluginConfig = {
       Name: 'EaCRuntimeWebPlugin',
       Plugins: [new FathymAzureContainerCheckPlugin()],
@@ -125,12 +119,12 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
                 IsPrivate: true,
                 IsTriggerSignIn: true,
               },
-              chat: {
-                PathPattern: '/api/chat',
-                Priority: 300,
-                // IsPrivate: true,
-                // IsTriggerSignIn: true,
-              },
+              // chat: {
+              //   PathPattern: '/api/chat',
+              //   Priority: 300,
+              //   // IsPrivate: true,
+              //   // IsTriggerSignIn: true,
+              // },
               dashboard: {
                 PathPattern: '*',
                 Priority: 100,
@@ -199,34 +193,34 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
               ProxyRoot: 'https://reqres.in/api',
             } as EaCProxyProcessor,
           },
-          chat: {
-            Details: {
-              Name: 'Chat Site',
-              Description: 'The chat used to display the main dashboard',
-            },
-            Processor: {
-              Type: 'AIChat',
-              AILookup: 'core',
-              DefaultInput: {
-                input: 'Tell me about Fathym Inc',
-                context: '',
-              },
-              DefaultRAGInput: {
-                input: 'Tell me about Fathym Inc',
-              },
-              EmbeddingsLookup: 'azureOpenAI',
-              LLMLookup: 'azureOpenAI',
-              VectorStoreLookup: 'azureSearchAI',
-              UseSSEFormat: true,
-              Messages: [
-                [
-                  'system',
-                  'You are an expert data engineer, data scientist, and will help the user create a KQL query. Keeping in mind the following context:\n\n{context}',
-                ],
-                ['human', '{input}'],
-              ],
-            } as EaCAIChatProcessor,
-          },
+          // chat: {
+          //   Details: {
+          //     Name: 'Chat Site',
+          //     Description: 'The chat used to display the main dashboard',
+          //   },
+          //   Processor: {
+          //     Type: 'AIChat',
+          //     AILookup: 'core',
+          //     DefaultInput: {
+          //       input: 'Tell me about Fathym Inc',
+          //       context: '',
+          //     },
+          //     DefaultRAGInput: {
+          //       input: 'Tell me about Fathym Inc',
+          //     },
+          //     EmbeddingsLookup: 'azureOpenAI',
+          //     LLMLookup: 'azureOpenAI',
+          //     VectorStoreLookup: 'azureSearchAI',
+          //     UseSSEFormat: true,
+          //     Messages: [
+          //       [
+          //         'system',
+          //         'You are an expert data engineer, data scientist, and will help the user create a KQL query. Keeping in mind the following context:\n\n{context}',
+          //       ],
+          //       ['human', '{input}'],
+          //     ],
+          //   } as EaCAIChatProcessor,
+          // },
           dashboard: {
             Details: {
               Name: 'Dashboard Site',
@@ -570,66 +564,66 @@ export default class EaCRuntimeWebPlugin implements EaCRuntimePlugin {
             } as EaCTracingModifierDetails,
           },
         },
-        AIs: {
-          core: {
-            Details: {
-              Name: 'Core AI',
-              Description: 'The Core AI for generative solutions.',
-            },
-            Embeddings: {
-              azureOpenAI: {
-                Details: {
-                  Name: 'Azure OpenAI LLM',
-                  Description: 'The LLM for interacting with Azure OpenAI.',
-                  APIKey: Deno.env.get('AZURE_OPENAI_KEY')!,
-                  Endpoint: Deno.env.get('AZURE_OPENAI_ENDPOINT')!,
-                  DeploymentName: 'text-embedding-ada-002',
-                } as EaCAzureOpenAIEmbeddingsDetails,
-              },
-            },
-            LLMs: {
-              azureOpenAI: {
-                Details: {
-                  Name: 'Azure OpenAI LLM',
-                  Description: 'The LLM for interacting with Azure OpenAI.',
-                  APIKey: Deno.env.get('AZURE_OPENAI_KEY')!,
-                  Endpoint: Deno.env.get('AZURE_OPENAI_ENDPOINT')!,
-                  DeploymentName: 'gpt-4-turbo',
-                  ModelName: 'gpt-4',
-                  Streaming: true,
-                  Verbose: false,
-                } as EaCAzureOpenAILLMDetails,
-              },
-              watsonX: {
-                Details: {
-                  Name: 'WatsonX LLM',
-                  Description: 'The LLM for interacting with WatsonX.',
-                  APIKey: Deno.env.get('IBM_CLOUD_API_KEY')!,
-                  ProjectID: Deno.env.get('IBM_WATSON_X_PROJECT_ID')!,
-                  ModelID: 'meta-llama/llama-2-70b-chat',
-                  ModelParameters: {
-                    max_new_tokens: 100,
-                    min_new_tokens: 0,
-                    stop_sequences: [],
-                    repetition_penalty: 1,
-                  },
-                } as EaCWatsonXLLMDetails,
-              },
-            },
-            VectorStores: {
-              azureSearchAI: {
-                Details: {
-                  Name: 'Azure Search AI',
-                  Description: 'The Vector Store for interacting with Azure Search AI.',
-                  APIKey: Deno.env.get('AZURE_AI_SEARCH_KEY')!,
-                  Endpoint: Deno.env.get('AZURE_AI_SEARCH_ENDPOINT')!,
-                  EmbeddingsLookup: 'azureOpenAI',
-                  QueryType: AzureAISearchQueryType.SimilarityHybrid,
-                } as EaCAzureSearchAIVectorStoreDetails,
-              },
-            },
-          },
-        },
+        // AIs: {
+        //   core: {
+        //     Details: {
+        //       Name: 'Core AI',
+        //       Description: 'The Core AI for generative solutions.',
+        //     },
+        //     Embeddings: {
+        //       azureOpenAI: {
+        //         Details: {
+        //           Name: 'Azure OpenAI LLM',
+        //           Description: 'The LLM for interacting with Azure OpenAI.',
+        //           APIKey: Deno.env.get('AZURE_OPENAI_KEY')!,
+        //           Endpoint: Deno.env.get('AZURE_OPENAI_ENDPOINT')!,
+        //           DeploymentName: 'text-embedding-ada-002',
+        //         } as EaCAzureOpenAIEmbeddingsDetails,
+        //       },
+        //     },
+        //     LLMs: {
+        //       azureOpenAI: {
+        //         Details: {
+        //           Name: 'Azure OpenAI LLM',
+        //           Description: 'The LLM for interacting with Azure OpenAI.',
+        //           APIKey: Deno.env.get('AZURE_OPENAI_KEY')!,
+        //           Endpoint: Deno.env.get('AZURE_OPENAI_ENDPOINT')!,
+        //           DeploymentName: 'gpt-4-turbo',
+        //           ModelName: 'gpt-4',
+        //           Streaming: true,
+        //           Verbose: false,
+        //         } as EaCAzureOpenAILLMDetails,
+        //       },
+        //       watsonX: {
+        //         Details: {
+        //           Name: 'WatsonX LLM',
+        //           Description: 'The LLM for interacting with WatsonX.',
+        //           APIKey: Deno.env.get('IBM_CLOUD_API_KEY')!,
+        //           ProjectID: Deno.env.get('IBM_WATSON_X_PROJECT_ID')!,
+        //           ModelID: 'meta-llama/llama-2-70b-chat',
+        //           ModelParameters: {
+        //             max_new_tokens: 100,
+        //             min_new_tokens: 0,
+        //             stop_sequences: [],
+        //             repetition_penalty: 1,
+        //           },
+        //         } as EaCWatsonXLLMDetails,
+        //       },
+        //     },
+        //     VectorStores: {
+        //       azureSearchAI: {
+        //         Details: {
+        //           Name: 'Azure Search AI',
+        //           Description: 'The Vector Store for interacting with Azure Search AI.',
+        //           APIKey: Deno.env.get('AZURE_AI_SEARCH_KEY')!,
+        //           Endpoint: Deno.env.get('AZURE_AI_SEARCH_ENDPOINT')!,
+        //           EmbeddingsLookup: 'azureOpenAI',
+        //           QueryType: AzureAISearchQueryType.SimilarityHybrid,
+        //         } as EaCAzureSearchAIVectorStoreDetails,
+        //       },
+        //     },
+        //   },
+        // },
       },
     };
 
