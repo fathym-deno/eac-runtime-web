@@ -1,4 +1,4 @@
-import { ComponentChildren, JSX } from 'preact';
+import { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 import Button from './Button.tsx';
 // import { IS_BROWSER } from '@fathym/eac/runtime/browser';

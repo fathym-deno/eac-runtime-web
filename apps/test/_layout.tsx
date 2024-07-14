@@ -1,6 +1,6 @@
 import { PageProps } from '@fathym/eac/runtime';
 
-export default function Layout({ Data, Component, Revision }: PageProps) {
+export default function Layout({ Component, Revision }: PageProps) {
   return (
     <html>
       <head>

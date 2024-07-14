@@ -17,7 +17,7 @@ export const handler: EaCRuntimeHandlerResult = [
   },
 ];
 
-export default function Index({ Data }: PageProps) {
+export default function Index({}: PageProps) {
   return (
     <div>
       <div class='py-16 px-4 bg-slate-500'>
